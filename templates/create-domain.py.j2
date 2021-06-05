@@ -94,7 +94,7 @@ set('ListenPort',5556)
 cd('/Servers/AdminServer')
 set('Machine','{{ inventory_hostname }}')
 
-{% for key,value in domain.clusters.iteritems() %}
+{% for key,value in domain.clusters.items() %}
 print('Create cluster {{ key }}')
 cd('/')
 create('{{ key }}','Cluster')
@@ -111,7 +111,7 @@ closeDomain()
 ###############################
 #### create servers
 readDomain('{{ domain_home }}')
-{% for key,value in domain.servers.iteritems() %}
+{% for key,value in domain.servers.items() %}
 print('Create server {{ key }}')
 cd('/')
 create('{{ key }}','Server')
@@ -159,6 +159,44 @@ set('FileCount', 50)
 
 updateDomain()
 closeDomain()
+####################################
+# Enabled GZIP Compression #
+####################################
+readDomain()
+cd('/WebAppContainer/{{ domain_name }}')
+cmo.setFilterDispatchedRequestsEnabled(false)
+cmo.setWeblogicPluginEnabled(false)
+cmo.setOverloadProtectionEnabled(false)
+cmo.setMaxPostSize(-1)
+cmo.setWorkContextPropagationEnabled(true)
+cmo.setAllowAllRoles(false)
+cmo.setMimeMappingFile('./config/mimemappings.properties')
+cmo.setJSPCompilerBackwardsCompatible(false)
+cmo.setOptimisticSerialization(false)
+cmo.setAuthCookieEnabled(true)
+cmo.setRtexprvalueJspParamName(false)
+cmo.setMaxPostTimeSecs(-1)
+cmo.setShowArchivedRealPathEnabled(false)
+cmo.setWAPEnabled(false)
+cmo.setHttpTraceSupportEnabled(false)
+cmo.setPostTimeoutSecs(30)
+cmo.setReloginEnabled(false)
+cmo.setChangeSessionIDOnAuthentication(true)
+cmo.setXPoweredByHeaderLevel('NONE')
+cmo.setClientCertProxyEnabled(false)
+cmo.setXPoweredByHeaderLevel('NONE')
 
+cd('/WebAppContainer/{{ domain_name }}/GzipCompression/{{ domain_name }}')
+cmo.setGzipCompressionEnabled(true)
+cmo.setGzipCompressionMinContentLength(2048)
+set('GzipCompressionContentType',jarray.array([String('text/html^M'), String('text/xml^M'), String('text/plain^M'), String('text/css ^M'), String('text/javascript ^M'), String('application/javascript ^M'), String('application/x-javascript application/json ^M'), String('application/xml ^M'), String('application/xhtml+xml ^M'), String('image/svg+xml^M')], String))
+
+cd('/WebAppContainer/{{ domain_name }}')
+cmo.setXPoweredByHeaderLevel('NONE')
+
+cd('/WebAppContainer/{{ domain_name }}/GzipCompression/{{ domain_name }}')
+set('GzipCompressionContentType',jarray.array([String('text/html^M'), String('text/xml^M'), String('text/plain^M'), String('text/css^M'), String('text/javascript^M'), String('application/javascript^M'), String('application/x-javascript application/json^M'), String('application/xml^M'), String('application/xhtml+xml^M'), String('image/svg+xml^M')], String))
+
+updateDomain()
+closeDomain()
 exit()
-
