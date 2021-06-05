@@ -158,18 +158,5 @@ set('FileCount', 50)
 
 updateDomain()
 closeDomain()
-####################################
-# Enabled GZIP Compression #
-####################################
-readDomain('{{ domain_home }}')
-cd('/WebAppContainer/{{ domain_name }}')
-cmo.setXPoweredByHeaderLevel('NONE')
 
-cd('/WebAppContainer/{{ domain_name }}/GzipCompression/{{ domain_name }}')
-cmo.setGzipCompressionEnabled(true)
-cmo.setGzipCompressionMinContentLength(2048)
-set('GzipCompressionContentType',jarray.array([String('text/html^M'), String('text/xml^M'), String('text/plain^M'), String('text/css ^M'), String('text/javascript ^M'), String('application/javascript ^M'), String('application/x-javascript application/json ^M'), String('application/xml ^M'), String('application/xhtml+xml ^M'), String('image/svg+xml^M')], String))
-
-updateDomain()
-closeDomain()
 exit()
