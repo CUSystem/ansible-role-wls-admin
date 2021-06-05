@@ -161,7 +161,7 @@ closeDomain()
 ####################################
 # Enabled GZIP Compression #
 ####################################
-readDomain()
+readDomain('{{ domain_home }}')
 cd('/WebAppContainer/{{ domain_name }}')
 cmo.setFilterDispatchedRequestsEnabled(false)
 cmo.setWeblogicPluginEnabled(false)
